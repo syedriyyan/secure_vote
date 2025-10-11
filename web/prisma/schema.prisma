@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // or hardcode for test:
+  // url = "postgresql://syed:syedali@localhost:5432/securevote_db?schema=public"
+}
+
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String
+  emailVerified Boolean  @default(false)
+  image         String?
+  createdAt     DateTime @default(now())
+}
+
+
+model Election {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  createdAt   DateTime @default(now())
+}
+
+model Vote {
+  id         String   @id @default(cuid())
+  electionId String
+  userId     String
+  choice     String
+  createdAt  DateTime @default(now())
+
+  @@unique([electionId, userId])
+}
+model Candidate {
+  id          String   @id @default(cuid())
+  electionId  String
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+}
