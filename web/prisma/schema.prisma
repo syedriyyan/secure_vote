@@ -9,40 +9,49 @@ datasource db {
   // url = "postgresql://syed:syedali@localhost:5432/securevote_db?schema=public"
 }
 
-
 model User {
   id            String   @id @default(cuid())
-  name          String
+  name          String?
   email         String   @unique
   password      String
+  role          Role     @default(VOTER)
   emailVerified Boolean  @default(false)
-  image         String?
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt @default(now()) 
 }
 
+enum Role {
+  ADMIN
+  VOTER
+}
 
 model Election {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   title       String
-  description String?
+  description String
   startDate   DateTime
   endDate     DateTime
-  createdAt   DateTime @default(now())
+  createdBy   String
+  candidates  Candidate[]
+  createdAt   DateTime    @default(now())
+}
+
+model Candidate {
+  id          String      @id @default(cuid())
+  name        String
+  party       String?
+  electionId  String
+  election    Election    @relation(fields: [electionId], references: [id])
+  votes       Vote[]
 }
 
 model Vote {
-  id         String   @id @default(cuid())
-  electionId String
-  userId     String
-  choice     String
-  createdAt  DateTime @default(now())
-
-  @@unique([electionId, userId])
-}
-model Candidate {
   id          String   @id @default(cuid())
+  voterId     String
+  candidateId String
   electionId  String
-  name        String
-  description String?
   createdAt   DateTime @default(now())
+
+  @@unique([voterId, electionId]) 
+  Candidate Candidate[]
 }

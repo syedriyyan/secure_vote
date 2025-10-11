@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function RegisterForm() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +25,12 @@ export default function RegisterForm() {
         body: JSON.stringify({ name, email, password }),
       });
       const data = await res.json();
-      setMessage(data.success ? "Registered successfully!" : data.error);
+      if (data.success) {
+        // redirect to login after successful registration
+        router.push("/login");
+      } else {
+        setMessage(data.error);
+      }
     } catch {
       setMessage("Something went wrong");
     } finally {
