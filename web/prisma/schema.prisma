@@ -46,12 +46,12 @@ model Candidate {
 }
 
 model Vote {
-  id          String   @id @default(cuid())
+  id          String     @id @default(cuid())
   voterId     String
   candidateId String
   electionId  String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime   @default(now())
+  candidate   Candidate  @relation(fields: [candidateId], references: [id])
 
   @@unique([voterId, electionId]) 
-  Candidate Candidate[]
 }

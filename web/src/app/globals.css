@@ -118,5 +118,16 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+      Helvetica, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+  }
+
+  :root {
+    --font-geist-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+      Helvetica, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji",
+      "Segoe UI Symbol";
+    --font-geist-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
   }
 }
