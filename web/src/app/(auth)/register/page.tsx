@@ -32,21 +32,32 @@ export default function RegisterPage() {
       role: role,
     };
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    if (res.ok) {
-      toast.success("Registration successful! Please login.");
-      router.push("/login");
-    } else {
-      const data = await res.json();
-      toast.error(data.error || "Registration failed");
+      if (res.ok) {
+        toast.success("Registration successful! Please login.");
+        router.push("/login");
+      } else {
+        let message = "Registration failed";
+        try {
+          const data = await res.json();
+          message = data.error || message;
+        } catch {
+          // ignore JSON parse errors
+        }
+        toast.error(message);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to register";
+      toast.error(`Request error: ${message}. Check API and database config.`);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
